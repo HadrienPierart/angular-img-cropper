@@ -708,9 +708,45 @@ angular.module('angular-img-cropper',[]).directive("imageCropper",  ['$document'
                     this.vertSquashRatio = this.detectVerticalSquash(img);
                     this.draw(this.ctx);
                     var croppedImg = this.getCroppedImage(scope.cropWidth, scope.cropHeight);
+                    this.publishCropData();
                     scope.croppedImage = croppedImg.src;
-                  
+
                 };
+
+                ImageCropper.prototype.publishCropData = function () {
+                  var sourceAspect = this.srcImage.height / this.srcImage.width;
+                  var canvasAspect = this.canvas.height / this.canvas.width;
+                  var w = this.canvas.width;
+                  var h = this.canvas.height;
+                  if (canvasAspect > sourceAspect) {
+                    w = this.canvas.width;
+                    h = this.canvas.width * sourceAspect;
+                  }
+                  else if (canvasAspect < sourceAspect) {
+                    h = this.canvas.height;
+                    w = this.canvas.height / sourceAspect;
+                  }
+                  else {
+                    h = this.canvas.height;
+                    w = this.canvas.width;
+                  }
+                  var ratioW = w / this.srcImage.width;
+                  var ratioH = h / this.srcImage.height;
+                  var offsetW = (this.buffer.width - w) / 2;
+                  var offsetH = (this.buffer.height - h) / 2;
+
+                  scope.$emit('crop:done', {
+                    tl: [this.tl.position.x - offsetW, this.tl.position.y - offsetH],
+                    tr: [this.tr.position.x - offsetW, this.tr.position.y - offsetH],
+                    bl: [this.bl.position.x - offsetW, this.bl.position.y - offsetH],
+                    br: [this.br.position.x - offsetW, this.br.position.y - offsetH],
+                    cropWidth: Math.round(Math.abs(this.tr.position.x - this.tl.position.x) / ratioW),
+                    cropHeight: Math.round(Math.abs(this.bl.position.y - this.tl.position.y) / ratioH),
+                    srcWidth: this.srcImage.width,
+                    srcHeight: this.srcImage.height
+                  });
+                };
+
                 ImageCropper.prototype.getCroppedImage = function (fillWidth, fillHeight) {
                     var bounds = this.getBounds();
                     if (!this.srcImage) {
@@ -918,6 +954,7 @@ angular.module('angular-img-cropper',[]).directive("imageCropper",  ['$document'
                      if (crop.isImageSet())
                     {
                       var img = this.getCroppedImage(scope.cropWidth, scope.cropHeight);
+                      this.publishCropData();
                       scope.croppedImage = img.src;
                       scope.$apply();
                     }
@@ -969,6 +1006,7 @@ angular.module('angular-img-cropper',[]).directive("imageCropper",  ['$document'
                         this.isMouseDown = false;
                         this.handleRelease(new CropTouch(0,0,0));
                         var img = this.getCroppedImage(scope.cropWidth, scope.cropHeight);
+                        this.publishCropData();
                         scope.croppedImage = img.src;
                         scope.$apply();
                     }
@@ -993,14 +1031,15 @@ angular.module('angular-img-cropper',[]).directive("imageCropper",  ['$document'
                     if(newValue!=null) {
                         var imageObj = new Image();
                       imageObj.addEventListener("load", function () {
-                                      
+
                         crop.setImage(imageObj);
                          var img = crop.getCroppedImage(scope.cropWidth, scope.cropHeight);
+                         crop.publishCropData();
                         scope.croppedImage = img.src;
                         scope.$apply();
                         }, false);
                       imageObj.src = newValue;
-                        
+
                     }
                 }
             );

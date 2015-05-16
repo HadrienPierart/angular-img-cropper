@@ -709,7 +709,7 @@ angular.module('angular-img-cropper',[]).directive("imageCropper",  ['$document'
                     this.draw(this.ctx);
                     var croppedImg = this.getCroppedImage(scope.cropWidth, scope.cropHeight);
                     scope.croppedImage = croppedImg.src;
-                  
+
                 };
                 ImageCropper.prototype.getCroppedImage = function (fillWidth, fillHeight) {
                     var bounds = this.getBounds();
@@ -993,14 +993,14 @@ angular.module('angular-img-cropper',[]).directive("imageCropper",  ['$document'
                     if(newValue!=null) {
                         var imageObj = new Image();
                       imageObj.addEventListener("load", function () {
-                                      
+
                         crop.setImage(imageObj);
                          var img = crop.getCroppedImage(scope.cropWidth, scope.cropHeight);
                         scope.croppedImage = img.src;
                         scope.$apply();
                         }, false);
                       imageObj.src = newValue;
-                        
+
                     }
                 }
             );
