@@ -751,10 +751,10 @@ angular.module('angular-img-cropper',[]).directive("imageCropper",  ['$document'
                   var offsetH = (this.buffer.height - h) / 2;
 
                   scope.$emit('crop:done', {
-                    tl: [this.tl.position.x - offsetW, this.tl.position.y - offsetH],
-                    tr: [this.tr.position.x - offsetW, this.tr.position.y - offsetH],
-                    bl: [this.bl.position.x - offsetW, this.bl.position.y - offsetH],
-                    br: [this.br.position.x - offsetW, this.br.position.y - offsetH],
+                    tl: [(this.tl.position.x - offsetW) / ratioW, (this.tl.position.y - offsetH) / ratioH],
+                    tr: [(this.tr.position.x - offsetW) / ratioW, (this.tr.position.y - offsetH) / ratioH],
+                    bl: [(this.bl.position.x - offsetW) / ratioW, (this.bl.position.y - offsetH) / ratioH],
+                    br: [(this.br.position.x - offsetW) / ratioW, (this.br.position.y - offsetH) / ratioH],
                     cropWidth: Math.round(Math.abs(this.tr.position.x - this.tl.position.x) / ratioW),
                     cropHeight: Math.round(Math.abs(this.bl.position.y - this.tl.position.y) / ratioH),
                     srcWidth: this.srcImage.width,
