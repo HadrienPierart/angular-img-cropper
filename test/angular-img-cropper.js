@@ -770,8 +770,8 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     this.vertSquashRatio = this.detectVerticalSquash(img);
                     this.draw(this.ctx);
                     var croppedImg = this.getCroppedImage(scope.cropWidth, scope.cropHeight);
-                    this.publishCropData();
                     scope.croppedImage = croppedImg.src;
+                    this.publishCropData();
 
                     if (scope.cropAreaBounds && this.imageSet) {
                         scope.cropAreaBounds = this.getCropBounds();
@@ -1109,7 +1109,7 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                             crop.setImage(imageObj);
                             var img = crop.getCroppedImage(scope.cropWidth, scope.cropHeight);
                             scope.croppedImage = img.src;
-                            this.publishCropData();
+                            crop.publishCropData();
                             scope.$apply();
                         }, false);
                         imageObj.src = newValue;
