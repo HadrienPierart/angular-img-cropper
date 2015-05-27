@@ -882,6 +882,44 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     bounds.bottom = maxY;
                     return bounds;
                 };
+                ImageCropper.prototype.setBounds = function (bounds) {
+
+                    var topLeft;
+                    var topRight;
+                    var bottomLeft;
+                    var bottomRight;
+
+                    var currentBounds = this.getBounds();
+                    for (var i = 0; i < this.markers.length; i++) {
+                        var marker = this.markers[i];
+
+                        if (marker.getPosition().x == currentBounds.left) {
+                            if (marker.getPosition().y == currentBounds.top) {
+                                topLeft = marker;
+                            }
+                            else {
+                                bottomLeft = marker;
+                            }
+                        }
+                        else {
+                            if (marker.getPosition().y == currentBounds.top) {
+                                topRight = marker;
+                            }
+                            else {
+                                bottomRight = marker;
+                            }
+                        }
+                    }
+
+                    topLeft.setPosition(bounds.left, bounds.top);
+                    topRight.setPosition(bounds.right, bounds.top);
+                    bottomLeft.setPosition(bounds.left, bounds.bottom);
+                    bottomRight.setPosition(bounds.right, bounds.bottom);
+
+                    this.center.recalculatePosition(bounds);
+                    this.center.draw(this.ctx);
+
+                };
                 ImageCropper.prototype.getMousePos = function (canvas, evt) {
                     var rect = canvas.getBoundingClientRect();
                     return PointPool.instance.borrow(evt.clientX - rect.left, evt.clientY - rect.top);
@@ -1067,7 +1105,7 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     return (ratio === 0) ? 1 : ratio;
                 };
                 ImageCropper.prototype.onMouseDown = function (e) {
-                    if(crop.isImageSet()) {
+                    if (crop.isImageSet()) {
                         this.isMouseDown = true;
                     }
                 };
@@ -1077,7 +1115,7 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                         this.isMouseDown = false;
                         this.handleRelease(new CropTouch(0, 0, 0));
 
-                        if(this.currentlyInteracting==true) {
+                        if (this.currentlyInteracting == true) {
                             var img = this.getCroppedImage(scope.cropWidth, scope.cropHeight);
                             scope.croppedImage = img.src;
                             this.publishCropData();
