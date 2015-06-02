@@ -966,7 +966,8 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     cropWidth: Math.round(Math.abs(this.tr.position.x - this.tl.position.x) / ratioW),
                     cropHeight: Math.round(Math.abs(this.bl.position.y - this.tl.position.y) / ratioH),
                     srcWidth: this.srcImage.width,
-                    srcHeight: this.srcImage.height
+                    srcHeight: this.srcImage.height,
+                    ratio: ratioW
                   });
                 };
 
