@@ -1365,6 +1365,10 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
             scope.$watch('touchRadius', setup);
 
             scope.$watch('image', load);
+
+            scope.$on('$destroy', function () {
+              angular.element(window).off('mousemove.angular-img-cropper mouseup.angular-img-cropper touchmove.angular-img-cropper touchend.angular-img-cropper');
+            });
         }
     };
 }]);
